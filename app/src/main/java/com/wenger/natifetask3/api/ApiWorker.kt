@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit
 object ApiWorker {
 
     private var mClient: OkHttpClient? = null
+    private var mApi: ApiService? = null
 
     private val client: OkHttpClient
         get() {
@@ -22,10 +23,19 @@ object ApiWorker {
             return mClient!!
         }
 
-    fun provideUserListApi() : ApiService = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
-        .create(ApiService::class.java)
+    private val api: ApiService
+        get() {
+            if (mApi == null) {
+                val apiBuilder = Retrofit.Builder()
+                    .baseUrl(Constants.BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build()
+                    .create(ApiService::class.java)
+                mApi = apiBuilder
+            }
+            return mApi!!
+        }
+
+    fun provideUserListApi(): ApiService = api
 }

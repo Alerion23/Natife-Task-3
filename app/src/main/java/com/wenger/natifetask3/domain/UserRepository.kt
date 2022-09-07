@@ -1,9 +1,8 @@
 package com.wenger.natifetask3.domain
 
-import com.wenger.natifetask3.data.UserResponse
-import retrofit2.Call
+import com.wenger.natifetask3.data.ResultResponse
 
 interface UserRepository {
 
-    fun getAllUsers() : Call<UserResponse>
+    fun getAllUsers(list: (List<ResultResponse>) -> Unit) : (List<ResultResponse>) -> Unit
 }

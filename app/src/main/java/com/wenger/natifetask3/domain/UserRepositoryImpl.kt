@@ -12,7 +12,7 @@ class UserRepositoryImpl(
 ) : UserRepository {
 
 
-    override fun getAllUsers(list: (List<ResultResponse>) -> Unit): (List<ResultResponse>) -> Unit {
+    override fun getAllUsers(list: (List<ResultResponse>) -> Unit) {
         api.provideUserListApi().getUsers().enqueue(object: Callback<UserResponse> {
             override fun onResponse(call: Call<UserResponse>, response: Response<UserResponse>) {
                 val result = response.body()?.results
@@ -26,6 +26,5 @@ class UserRepositoryImpl(
                 list(result)
             }
         })
-        return list
     }
 }

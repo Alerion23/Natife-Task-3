@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wenger.natifetask3.data.ResultResponse
+import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.databinding.UserListBinding
 
 class UserAdapter(
-    private val onItemClicked: (ResultResponse) -> Unit
-) : ListAdapter<ResultResponse, UserAdapter.MyViewHolder>(UserDiffCallBack()) {
+    private val onItemClicked: (String) -> Unit
+) : ListAdapter<User, UserAdapter.MyViewHolder>(UserDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding = UserListBinding.inflate(
@@ -23,27 +23,31 @@ class UserAdapter(
         holder.onBind(getItem(position))
     }
 
-    class UserDiffCallBack : DiffUtil.ItemCallback<ResultResponse>() {
-        override fun areItemsTheSame(oldItem: ResultResponse, newItem: ResultResponse): Boolean {
-            return oldItem.id.uuid == newItem.id.uuid
+    class UserDiffCallBack : DiffUtil.ItemCallback<User>() {
+        override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem.uuid == newItem.uuid
         }
 
-        override fun areContentsTheSame(oldItem: ResultResponse, newItem: ResultResponse): Boolean {
-            return oldItem.name.firstName == newItem.name.firstName &&
-                    oldItem.name.lastName == newItem.name.lastName &&
-                    oldItem.picture.url == newItem.picture.url
+        override fun areContentsTheSame(oldItem: User, newItem: User): Boolean {
+            return oldItem.name == newItem.name &&
+                    oldItem.lastName == newItem.lastName &&
+                    oldItem.userPhoto == newItem.userPhoto
         }
     }
 
     class MyViewHolder(
-        private val onItemClicked: (ResultResponse) -> Unit,
+        private val onItemClicked: (String) -> Unit,
         private val binding: UserListBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun onBind(currentItem: ResultResponse) {
-            binding.name.text = currentItem.name.firstName
+        fun onBind(currentItem: User) {
+            binding.name.text = currentItem.name
             itemView.setOnClickListener {
-                onItemClicked(currentItem)
+                val uuid = currentItem.uuid
+                if (uuid != null) {
+                    onItemClicked(uuid)
+                }
+
             }
         }
     }

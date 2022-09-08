@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wenger.natifetask3.R
 import com.wenger.natifetask3.api.ApiWorker
+import com.wenger.natifetask3.data.DatabaseWorker
+import com.wenger.natifetask3.data.managers.DataManager
+import com.wenger.natifetask3.data.managers.DataManagerImpl
 import com.wenger.natifetask3.databinding.FragmentUserListBinding
 import com.wenger.natifetask3.domain.UserRepository
 import com.wenger.natifetask3.domain.UserRepositoryImpl
@@ -18,12 +21,14 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
 
     private var binding: FragmentUserListBinding? = null
     private val viewModel: UserListViewModel by viewModels {
-        val repository: UserRepository = UserRepositoryImpl(ApiWorker)
+        val dataBaseWorker = DatabaseWorker(requireContext())
+        val dataManager: DataManager = DataManagerImpl(dataBaseWorker)
+        val repository: UserRepository = UserRepositoryImpl(ApiWorker, dataManager)
         UserListViewModelFactory(repository)
     }
     private val userAdapter: UserAdapter by lazy {
-        UserAdapter { item ->
-            val directions = UserListFragmentDirections.goToUserInfoFragment(item)
+        UserAdapter { uuid ->
+            val directions = UserListFragmentDirections.goToUserInfoFragment(uuid)
             findNavController().navigate(directions)
         }
     }
@@ -36,15 +41,18 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
     }
 
     private fun observeViewModel() {
-        viewModel.userList.observe(viewLifecycleOwner) {
-            userAdapter.submitList(it)
+        binding?.apply {
+            viewModel.userList.observe(viewLifecycleOwner) {
+                userAdapter.submitList(it)
+            }
+            viewModel.isLoading.observe(viewLifecycleOwner) {
+                userListProgressBar.isVisible = it
+            }
+            viewModel.error.observe(viewLifecycleOwner) {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
         }
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-                   binding?.userListProgressBar?.isVisible = it
-        }
-        viewModel.error.observe(viewLifecycleOwner) {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        }
+
     }
 
     private fun setUpView() {

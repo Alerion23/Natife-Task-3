@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UserInfoViewModel(
-    private val repository: UserRepository
+    private val repository: UserRepository,
+    private val userId: String
 ) : ViewModel() {
 
     private val _userInfo = MutableLiveData<User>()
@@ -19,12 +20,14 @@ class UserInfoViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    init {
+        getUserInfo()
+    }
 
-    fun getUserInfo(uuid: String) {
+    private fun getUserInfo() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.Main) {
-            val user = repository.getUserById(uuid)
-            _userInfo.value = user
+            _userInfo.value = repository.getUserById(userId)
             _isLoading.value = false
         }
     }

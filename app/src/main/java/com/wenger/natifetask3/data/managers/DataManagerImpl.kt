@@ -1,33 +1,27 @@
 package com.wenger.natifetask3.data.managers
 
-import com.wenger.natifetask3.data.DatabaseWorker
 import com.wenger.natifetask3.data.User
+import com.wenger.natifetask3.data.UsersDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class DataManagerImpl(private val database: DatabaseWorker) : DataManager {
+class DataManagerImpl(private val database: UsersDatabase) : DataManager {
 
-    override suspend fun uploadUser(users: List<User>) {
-        withContext(Dispatchers.IO) {
-            database.getDatabaseClient().UsersDao().uploadUsers(users)
-        }
+    override fun uploadUser(users: List<User>) {
+            database.usersDao().uploadUsers(users)
     }
 
     override suspend fun getUserById(uuid: String): User {
         return withContext(Dispatchers.IO) {
-            database.getDatabaseClient().UsersDao().getUserById(uuid)
+            database.usersDao().getUserById(uuid)
         }
     }
 
-    override suspend fun clearUsers() {
-        withContext(Dispatchers.IO) {
-            database.getDatabaseClient().clearAllTables()
-        }
+    override fun clearUsers() {
+            database.clearAllTables()
     }
 
-    override suspend fun getAllUsers(): List<User> {
-        return withContext(Dispatchers.IO) {
-            database.getDatabaseClient().UsersDao().getAll()
-        }
+    override fun getAllUsers(): List<User> {
+        return database.usersDao().getAll()
     }
 }

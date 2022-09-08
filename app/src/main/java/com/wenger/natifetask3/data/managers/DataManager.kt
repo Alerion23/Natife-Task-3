@@ -4,11 +4,11 @@ import com.wenger.natifetask3.data.User
 
 interface DataManager {
 
-    suspend fun uploadUser(users: List<User>)
+    fun uploadUser(users: List<User>)
 
-    suspend fun getUserById(uuid: String) : User
+    suspend fun getUserById(uuid: String): User
 
-    suspend fun clearUsers()
+    fun clearUsers()
 
-    suspend fun getAllUsers() : List<User>
+    fun getAllUsers(): List<User>
 }

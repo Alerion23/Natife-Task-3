@@ -8,11 +8,11 @@ import androidx.room.Query
 interface UsersDAO {
 
     @Insert
-    suspend fun uploadUsers(users: List<User>)
+    fun uploadUsers(users: List<User>)
 
     @Query("SELECT * FROM User WHERE uuid = :uuid")
     suspend fun getUserById(uuid: String?): User
 
     @Query("SELECT * FROM User")
-    suspend fun getAll() : List<User>
+    fun getAll(): List<User>
 }

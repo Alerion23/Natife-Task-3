@@ -15,6 +15,8 @@ class UserRepositoryImpl(
     private val dataManager: DataManager
 ) : UserRepository {
 
+    private var firstLoad = true
+
     override suspend fun getAllUsers(list: (List<User>) -> Unit) {
         withContext(Dispatchers.IO) {
             api.getUsers().enqueue(object : Callback<UserResponse> {
@@ -28,7 +30,10 @@ class UserRepositoryImpl(
                             it.toUser()
                         }
                         list(userList)
-                        dataManager.clearUsers()
+                        if (firstLoad) {
+                            firstLoad = false
+                            dataManager.clearUsers()
+                        }
                         dataManager.uploadUser(userList)
                     }
                 }

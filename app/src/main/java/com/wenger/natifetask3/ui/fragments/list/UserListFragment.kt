@@ -27,10 +27,14 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
         UserListViewModelFactory(repository)
     }
     private val userAdapter: UserAdapter by lazy {
-        UserAdapter { uuid ->
+        UserAdapter(onItemClicked = { uuid ->
             val directions = UserListFragmentDirections.goToUserInfoFragment(uuid)
             findNavController().navigate(directions)
-        }
+        },
+            onListEnd = {
+                viewModel.getUsers()
+            }
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

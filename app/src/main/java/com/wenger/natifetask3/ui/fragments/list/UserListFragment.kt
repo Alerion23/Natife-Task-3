@@ -20,9 +20,10 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
 
     private var binding: FragmentUserListBinding? = null
     private val viewModel: UserListViewModel by viewModels {
+        val api = ApiWorker.provideUserListApi()
         val database = UsersDatabase.getDatabaseClient(requireContext())
         val dataManager: DataManager = DataManagerImpl(database)
-        val repository: UserRepository = UserRepositoryImpl(ApiWorker, dataManager)
+        val repository: UserRepository = UserRepositoryImpl(api, dataManager)
         UserListViewModelFactory(repository)
     }
     private val userAdapter: UserAdapter by lazy {
@@ -40,12 +41,12 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
     }
 
     private fun observeViewModel() {
-            viewModel.userList.observe(viewLifecycleOwner) {
-                userAdapter.submitList(it)
-            }
-            viewModel.isLoading.observe(viewLifecycleOwner) {
-                binding?.userListProgressBar?.isVisible = it
-            }
+        viewModel.userList.observe(viewLifecycleOwner) {
+            userAdapter.submitList(it)
+        }
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            binding?.userListProgressBar?.isVisible = it
+        }
     }
 
     private fun setUpView() {

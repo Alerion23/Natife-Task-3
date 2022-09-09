@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.wenger.natifetask3.data.ResultResponse
 import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.domain.UserRepository
 import com.wenger.natifetask3.utils.SingleLiveEvent

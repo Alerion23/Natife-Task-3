@@ -44,10 +44,7 @@ class UserAdapter(
             binding.name.text = currentItem.name
             itemView.setOnClickListener {
                 val uuid = currentItem.uuid
-                if (uuid != null) {
-                    onItemClicked(uuid)
-                }
-
+                onItemClicked(uuid)
             }
         }
     }

@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 class DataManagerImpl(private val database: UsersDatabase) : DataManager {
 
     override fun uploadUser(users: List<User>) {
-            database.usersDao().uploadUsers(users)
+        database.usersDao().uploadUsers(users)
     }
 
     override suspend fun getUserById(uuid: String): User {
@@ -18,7 +18,7 @@ class DataManagerImpl(private val database: UsersDatabase) : DataManager {
     }
 
     override fun clearUsers() {
-            database.clearAllTables()
+        database.clearAllTables()
     }
 
     override fun getAllUsers(): List<User> {

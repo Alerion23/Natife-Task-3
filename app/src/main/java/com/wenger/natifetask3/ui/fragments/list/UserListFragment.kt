@@ -2,9 +2,9 @@ package com.wenger.natifetask3.ui.fragments.list
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wenger.natifetask3.R
@@ -15,6 +15,7 @@ import com.wenger.natifetask3.data.managers.DataManagerImpl
 import com.wenger.natifetask3.databinding.FragmentUserListBinding
 import com.wenger.natifetask3.domain.UserRepository
 import com.wenger.natifetask3.domain.UserRepositoryImpl
+import kotlinx.coroutines.flow.collectLatest
 
 class UserListFragment : Fragment(R.layout.fragment_user_list) {
 
@@ -27,8 +28,8 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
         UserListViewModelFactory(repository)
     }
     private val userAdapter: UserAdapter by lazy {
-        UserAdapter { uuid ->
-            val directions = UserListFragmentDirections.goToUserInfoFragment(uuid)
+        UserAdapter { user ->
+            val directions = UserListFragmentDirections.goToUserInfoFragment(user)
             findNavController().navigate(directions)
         }
     }
@@ -41,11 +42,10 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
     }
 
     private fun observeViewModel() {
-        viewModel.userList.observe(viewLifecycleOwner) {
-            userAdapter.submitList(it)
-        }
-        viewModel.isLoading.observe(viewLifecycleOwner) {
-            binding?.userListProgressBar?.isVisible = it
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.getUsers().collectLatest {
+                userAdapter.submitData(it)
+            }
         }
     }
 

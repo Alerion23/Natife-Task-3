@@ -24,8 +24,8 @@
         tools:layout="@layout/fragment_user_info">
 
         <argument
-            android:name="userId"
-            app:argType="string" />
+            android:name="user"
+            app:argType="com.wenger.natifetask3.data.User" />
     </fragment>
 
 </navigation>

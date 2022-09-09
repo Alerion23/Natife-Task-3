@@ -1,44 +1,30 @@
 package com.wenger.natifetask3.domain
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.wenger.natifetask3.api.ApiService
+import com.wenger.natifetask3.data.ResultResponse
 import com.wenger.natifetask3.data.User
-import com.wenger.natifetask3.data.UserResponse
 import com.wenger.natifetask3.data.managers.DataManager
-import com.wenger.natifetask3.utils.toUser
-import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.wenger.natifetask3.ui.fragments.list.UserPagingSource
+import kotlinx.coroutines.flow.Flow
 
 class UserRepositoryImpl(
     private val api: ApiService,
     private val dataManager: DataManager
 ) : UserRepository {
 
-    override suspend fun getAllUsers(list: (List<User>) -> Unit) {
-        withContext(Dispatchers.IO) {
-            api.getUsers().enqueue(object : Callback<UserResponse> {
-                override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
-                ) {
-                    val result = response.body()?.results
-                    if (result != null) {
-                        val userList = result.map {
-                            it.toUser()
-                        }
-                        list(userList)
-                        dataManager.clearUsers()
-                        dataManager.uploadUser(userList)
-                    }
-                }
-
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
-                    val result = dataManager.getAllUsers()
-                    list(result)
-                }
-            })
-        }
+    override fun getAllUsers(): Flow<PagingData<ResultResponse>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                UserPagingSource(api)
+            }
+        ).flow
     }
 
     override suspend fun getUserById(uuid: String): User {

@@ -25,11 +25,12 @@ class UserListViewModel(
         getUsers()
     }
 
-    private fun getUsers() {
+    fun getUsers() {
         _isLoading.value = true
         viewModelScope.launch(Dispatchers.Main) {
             repository.getAllUsers {
-                _userList.value = it
+                val currentList = _userList.value ?: emptyList()
+                _userList.value = currentList + it
                 _isLoading.value = false
 
             }

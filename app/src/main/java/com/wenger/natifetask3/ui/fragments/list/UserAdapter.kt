@@ -8,8 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.databinding.UserListBinding
 
+private const val PREFER_ITEM_END = 5
+
 class UserAdapter(
-    private val onItemClicked: (String) -> Unit
+    private val onItemClicked: (String) -> Unit,
+    private val onListEnd: () -> Unit
 ) : ListAdapter<User, UserAdapter.MyViewHolder>(UserDiffCallBack()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -21,6 +24,9 @@ class UserAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.onBind(getItem(position))
+        if (position == itemCount - PREFER_ITEM_END) {
+            onListEnd()
+        }
     }
 
     class UserDiffCallBack : DiffUtil.ItemCallback<User>() {

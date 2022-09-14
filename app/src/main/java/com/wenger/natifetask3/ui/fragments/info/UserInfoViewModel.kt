@@ -1,17 +1,17 @@
 package com.wenger.natifetask3.ui.fragments.info
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.domain.UserRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class UserInfoViewModel(
+class UserInfoViewModel @AssistedInject constructor(
     private val repository: UserRepository,
-    private val userId: String
+    @Assisted private val userId: String
 ) : ViewModel() {
 
     private val _userInfo = MutableLiveData<User>()
@@ -19,6 +19,11 @@ class UserInfoViewModel(
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    @AssistedFactory
+    interface UserInfoFactory {
+        fun create(userId: String): UserInfoViewModel
+    }
 
     init {
         getUserInfo()
@@ -29,6 +34,17 @@ class UserInfoViewModel(
         viewModelScope.launch(Dispatchers.Main) {
             _userInfo.value = repository.getUserById(userId)
             _isLoading.value = false
+        }
+    }
+
+    companion object {
+        fun providesFactory(
+            assistedFactory: UserInfoFactory,
+            userId: String
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(userId) as T
+            }
         }
     }
 }

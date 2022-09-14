@@ -9,25 +9,24 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.wenger.natifetask3.R
-import com.wenger.natifetask3.api.ApiService
 import com.wenger.natifetask3.data.User
-import com.wenger.natifetask3.data.UsersDatabase
-import com.wenger.natifetask3.data.managers.DataManager
-import com.wenger.natifetask3.data.managers.DataManagerImpl
 import com.wenger.natifetask3.databinding.FragmentUserInfoBinding
-import com.wenger.natifetask3.domain.UserRepository
-import com.wenger.natifetask3.domain.UserRepositoryImpl
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
     private var binding: FragmentUserInfoBinding? = null
+    private val args: UserInfoFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var userInfoViewModel: UserInfoViewModel.UserInfoFactory
     private val viewModel: UserInfoViewModel by viewModels {
-        val args: UserInfoFragmentArgs by navArgs()
-        val api = ApiService.getInstance()
-        val database = UsersDatabase.getDatabaseClient(requireContext())
-        val dataManager: DataManager = DataManagerImpl(database)
-        val repository: UserRepository = UserRepositoryImpl(api, dataManager)
-        UserInfoViewModelFactory(repository, args.userId)
+        UserInfoViewModel.providesFactory(
+            userInfoViewModel,
+            args.userId
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -7,10 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.domain.UserRepository
 import com.wenger.natifetask3.utils.SingleLiveEvent
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel(
+@HiltViewModel
+class UserListViewModel @Inject constructor(
     private val repository: UserRepository,
 ) : ViewModel() {
 

@@ -3,7 +3,9 @@ package com.wenger.natifetask3.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.wenger.natifetask3.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding? = null

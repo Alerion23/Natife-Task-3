@@ -4,21 +4,30 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.wenger.natifetask3.R
+import com.wenger.natifetask3.api.ApiService
 import com.wenger.natifetask3.data.User
+import com.wenger.natifetask3.data.UsersDatabase
+import com.wenger.natifetask3.data.managers.DataManager
+import com.wenger.natifetask3.data.managers.DataManagerImpl
 import com.wenger.natifetask3.databinding.FragmentUserInfoBinding
-import org.koin.android.ext.android.inject
-import org.koin.core.parameter.parametersOf
+import com.wenger.natifetask3.domain.UserRepository
+import com.wenger.natifetask3.domain.UserRepositoryImpl
 
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
     private var binding: FragmentUserInfoBinding? = null
-    private val args: UserInfoFragmentArgs by navArgs()
-    private val viewModel: UserInfoViewModel by inject {
-        parametersOf(args.userId)
+    private val viewModel: UserInfoViewModel by viewModels {
+        val args: UserInfoFragmentArgs by navArgs()
+        val api = ApiService.getInstance()
+        val database = UsersDatabase.getDatabaseClient(requireContext())
+        val dataManager: DataManager = DataManagerImpl(database)
+        val repository: UserRepository = UserRepositoryImpl(api, dataManager)
+        UserInfoViewModelFactory(repository, args.userId)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

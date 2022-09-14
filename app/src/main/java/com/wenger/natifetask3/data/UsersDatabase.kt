@@ -9,24 +9,4 @@ import androidx.room.RoomDatabase
 abstract class UsersDatabase : RoomDatabase() {
 
     abstract fun usersDao(): UsersDAO
-
-    companion object {
-
-        @Volatile
-        private var instance: UsersDatabase? = null
-
-        fun getDatabaseClient(context: Context): UsersDatabase {
-            if (instance != null) {
-                return instance!!
-            }
-            synchronized(this) {
-                instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    UsersDatabase::class.java,
-                    "user database"
-                ).allowMainThreadQueries().build()
-                return instance!!
-            }
-        }
-    }
 }

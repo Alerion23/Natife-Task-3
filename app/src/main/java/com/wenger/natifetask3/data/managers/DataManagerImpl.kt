@@ -4,8 +4,11 @@ import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.data.UsersDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DataManagerImpl(private val database: UsersDatabase) : DataManager {
+class DataManagerImpl @Inject constructor(
+    private val database: UsersDatabase
+) : DataManager {
 
     override fun uploadUser(users: List<User>) {
         database.usersDao().uploadUsers(users)

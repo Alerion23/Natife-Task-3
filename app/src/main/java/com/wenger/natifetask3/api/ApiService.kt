@@ -13,39 +13,4 @@ interface ApiService {
 
     @GET("1.4/?results=20")
     fun getUsers(): Call<UserResponse>
-
-    companion object {
-
-        private var mClient: OkHttpClient? = null
-        private var mApi: ApiService? = null
-
-        private val client: OkHttpClient
-            get() {
-                if (mClient == null) {
-                    val httpBuilder = OkHttpClient.Builder()
-                        .connectTimeout(15, TimeUnit.SECONDS)
-                        .readTimeout(20, TimeUnit.SECONDS)
-                        .build()
-                    mClient = httpBuilder
-                }
-                return mClient!!
-            }
-
-
-        fun getInstance(): ApiService {
-            if (mApi != null) {
-                return mApi!!
-            }
-            synchronized(this) {
-                val apiBuilder = Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .client(client)
-                    .build()
-                    .create(ApiService::class.java)
-                mApi = apiBuilder
-            }
-            return mApi!!
-        }
-    }
 }

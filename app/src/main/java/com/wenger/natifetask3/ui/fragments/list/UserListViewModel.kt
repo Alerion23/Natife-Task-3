@@ -9,8 +9,9 @@ import com.wenger.natifetask3.domain.UserRepository
 import com.wenger.natifetask3.utils.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel(
+class UserListViewModel @Inject constructor(
     private val repository: UserRepository,
 ) : ViewModel() {
 

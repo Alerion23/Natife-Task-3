@@ -10,14 +10,14 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.wenger.natifetask3.R
 import com.wenger.natifetask3.data.User
 import com.wenger.natifetask3.databinding.FragmentUserInfoBinding
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class UserInfoFragment : Fragment(R.layout.fragment_user_info) {
 
     private var binding: FragmentUserInfoBinding? = null
     private val args: UserInfoFragmentArgs by navArgs()
-    private val viewModel: UserInfoViewModel by inject {
+    private val viewModel by viewModel<UserInfoViewModel> {
         parametersOf(args.userId)
     }
 

@@ -8,12 +8,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wenger.natifetask3.R
 import com.wenger.natifetask3.databinding.FragmentUserListBinding
-import org.koin.androidx.viewmodel.ext.android.sharedStateViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment(R.layout.fragment_user_list) {
 
     private var binding: FragmentUserListBinding? = null
-    private val viewModel by sharedStateViewModel<UserListViewModel>()
+    private val viewModel by viewModel<UserListViewModel>()
     private val userAdapter: UserAdapter by lazy {
         UserAdapter(onItemClicked = { uuid ->
             val directions = UserListFragmentDirections.goToUserInfoFragment(uuid)

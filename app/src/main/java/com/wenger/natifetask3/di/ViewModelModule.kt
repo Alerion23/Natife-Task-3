@@ -11,8 +11,8 @@ val viewModels = module {
         UserListViewModel(repository = get())
     }
 
-    viewModel { params ->
-        UserInfoViewModel(repository = get(), userId = params.get())
+    viewModel {
+        UserInfoViewModel(repository = get(), userId = get())
     }
 
 }
